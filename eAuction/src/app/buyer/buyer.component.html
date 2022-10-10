@@ -1,0 +1,178 @@
+
+<div class="container">
+   
+      <!-- Loader Button During API CALL -->
+      <button  style="margin-bottom: 2%;
+      margin-left: -14px;" *ngIf="product_loader" class="btn btn-primary" type="button" disabled>
+          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          Data Fetching...
+        </button>&nbsp;&nbsp;&nbsp;
+    <div>
+        <p-toast key="bidTableId"></p-toast>
+        <p-messages ></p-messages>
+    </div>
+    <div class="row">
+        <p-table [value]="product" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]">
+        <ng-template pTemplate="header">
+            <tr>
+             
+               <!-- <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th> -->
+                <th pSortableColumn="productName">Product Name <p-sortIcon field="productName"></p-sortIcon></th>
+                <th pSortableColumn="shortDescription">Short Description <p-sortIcon field="shortDescription"></p-sortIcon></th>
+                <th pSortableColumn="detailedDescription">Detailed Description <p-sortIcon field="detailedDescription"></p-sortIcon></th>
+                <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
+                <th pSortableColumn="shortPrice">Starting Price <p-sortIcon field="shortPrice"></p-sortIcon></th>
+                <th pSortableColumn="bidEndDate">BidEndDate <p-sortIcon field="bidEndDate"></p-sortIcon></th>
+                   <th>Action</th>
+                
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+               
+            <!-- <td>{{product.id}}</td> -->
+                <td>{{product.productName}}</td>
+                <td>{{product.shortDescription}}</td>
+                <td>{{product.detailedDescription}}</td>
+                <td>{{product.category}}</td>
+                <td>{{product.startingPrice}}</td>
+                <td>{{product.bidEndDate}}</td> 
+               
+                <td style="text-align:center">
+                    
+                    <button pButton pRipple type="button"   (click)="bidDetails(product.id,product.productName)" class="p-button-rounded p-button-text p-button-success" >Bid Details</button>
+                   
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+            <button type="button" icon="pi pi-plus" styleClass="p-button-text"></button>
+        </ng-template>
+        <ng-template pTemplate="paginatorright">
+            <button type="button" icon="pi pi-cloud" styleClass="p-button-text"></button>
+        </ng-template>
+    </p-table>
+    </div>
+
+    <div>
+        <!--popup for Bid details -->
+       
+        <div>
+        <p-dialog header="Bid Details" [(visible)]="bidDetailsDisplay" [breakpoints]="{'960px': '75vw'}" [style]="{width: '80vw'}"
+        [draggable]="false" [resizable]="false" >
+
+        <div  style="margin-bottom:10px; ">
+
+            <button *ngIf="!bidDetail_loader" type="button" class="btn btn-success"  (click)="showAddBidDetals(this.bidProductName,0,this.productId,'')"  >Add Bid</button>
+           <!-- Loader Button During API CALL -->
+      <button  *ngIf="bidDetail_loader" class="btn btn-primary" type="button" disabled>
+          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          Data Fetching...
+        </button>&nbsp;&nbsp;&nbsp;
+        </div>
+        <div >
+        <p-table [value]="biddetails" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]">
+         
+        
+        <ng-template pTemplate="header">
+        <tr>
+         
+          <!-- <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>  -->
+            <th pSortableColumn="productName">Product Name <p-sortIcon field="productName"></p-sortIcon></th>
+            <th pSortableColumn="bidPrice">Bid Price <p-sortIcon field="bidPrice"></p-sortIcon></th>
+            <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+            <!-- <th pSortableColumn="phone">Phone<p-sortIcon field="phone"></p-sortIcon></th> -->
+            <th>Action</th>
+            
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-biddetails>
+        <tr>
+           
+            <!-- <td>{{biddetails.id}}</td> -->
+            <td>{{this.bidProductName}}</td>
+            <td>{{biddetails.bidPrice}}</td>
+            <td>{{biddetails.userName}}</td>
+            <td>{{biddetails.email}}</td>
+            <!-- <td>{{biddetails.phone}}</td> -->
+            <td style="text-align:center" >
+                
+                <button pButton pRipple type="button"   (click)="showAddBidDetals(this.bidProductName,biddetails.bidPrice,this.productId,biddetails.id)" [style.display]="biddetails.email==this.login_email ? 'block':'none'" class="p-button-rounded p-button-text p-button-success" >Update Bid</button>
+                <button pButton pRipple type="button"   (click)="deleteBidDetals(biddetails.id,this.productId)" [style.display]="biddetails.email==this.login_email ? 'block':'none'" class="p-button-rounded p-button-text p-button-danger" >Delete Bid</button>
+                <!-- <button pButton pRipple type="button"  (click)="showAddBidDetals(this.bidProductName,0,this.productId,biddetails.id)" [style.display]="biddetails.email!=this.login_email ? 'block':'none'" class="p-button-rounded p-button-text p-button-success" >Add Bid</button> -->
+            </td>
+            
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+        <button type="button" icon="pi pi-plus" styleClass="p-button-text"></button>
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+        <button type="button" icon="pi pi-cloud" styleClass="p-button-text"></button>
+    </ng-template>
+    </p-table>
+</div>
+        </p-dialog>
+    
+    
+            </div>
+     </div>
+    <div>
+        <!--popup for Add Bid -->
+        
+        <div>
+      
+            <p-dialog header="Add/Update Bid" [(visible)]="addBidDisplay" [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}"
+            [draggable]="false" [resizable]="false">
+        
+            <form  #addBidForm="ngForm" (ngSubmit)="this.showAddButton ? addBid():updateBidDetals()" >
+                <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" class="form-control" id="productName" required  
+                        [(ngModel)]="model.productName" name="productName" disabled>
+                        
+                                    
+                       
+                </div>
+                <!--Call API Button -->
+
+                
+        
+                  <div class="form-group">
+                    <label for="bidPrice">Bid Price </label>
+                    <input min="1" type="number" class="form-control" id="bidPrice"
+                           required
+                           [(ngModel)]="model.bidPrice" name="bidPrice"
+                           #bidPrice="ngModel">
+                    <div [hidden]="bidPrice.valid || bidPrice.pristine"
+                         class="alert alert-danger">
+                         Bid Price is required
+                    </div>
+                  </div>
+                                             
+               
+        
+        <!--
+        <button type="submit" class="btn btn-success" [disabled]="!addBidForm.form.valid">Add/Update</button>&nbsp;&nbsp;&nbsp;
+        -->
+        <button *ngIf="!addBid_loader" class="btn btn-primary" type="button" (click)="this.showAddButton ? addBid():updateBidDetals()">
+            Add/Update
+            </button>&nbsp;&nbsp;&nbsp;
+          <!-- Loader Button During API CALL -->
+          <button *ngIf="addBid_loader" class="btn btn-primary" type="button" disabled>
+              <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+              Data Calling...
+            </button>&nbsp;&nbsp;&nbsp;
+          
+
+        <button type="button" (click)="cancelfromAddBidForm()" class="btn btn-primary" >Cancel</button>
+        </form>
+            
+        </p-dialog>
+    </div>
+        </div>
+
+</div>

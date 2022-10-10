@@ -1,0 +1,43 @@
+<div class="container">
+  <p-toast ></p-toast>
+    <div [hidden]="submitted">
+      <h1>User Login</h1>
+      <form #LoginForm="ngForm">
+                  <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email"
+                   required
+                   [(ngModel)]="model.email" name="email"
+                   #email="ngModel">
+            <div [hidden]="email.valid || email.pristine"
+                 class="alert alert-danger">
+              Email is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password"
+                   required
+                   [(ngModel)]="model.password" name="password"
+                   #password="ngModel">
+            <div [hidden]="password.valid || password.pristine"
+                 class="alert alert-danger">
+                 Password is required
+            </div>
+          </div>
+
+          <button *ngIf="!loader" class="btn btn-primary" type="button" (click)="loginUser()">
+            Login
+            </button>&nbsp;&nbsp;&nbsp;
+          <!-- Loader Button During API CALL -->
+          <button *ngIf="loader" class="btn btn-primary" type="button" disabled>
+              <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+              Login.....
+            </button>&nbsp;&nbsp;&nbsp;
+
+        <button type="button" class="btn btn-primary" (click)="gotoRegistration();LoginForm.reset()">Register</button> 
+      </form>
+    </div>
+  
+    

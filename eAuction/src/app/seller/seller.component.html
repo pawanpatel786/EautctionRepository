@@ -1,0 +1,184 @@
+
+<div class="container">
+    <p-toast ></p-toast>
+    <div class="row" style="margin-bottom:10px">
+
+        <button *ngIf="!product_loader"  class="btn btn-primary" type="button" (click)="productAddPopup()">
+            Add Product
+            </button>&nbsp;&nbsp;&nbsp;
+          <!-- Loader Button During API CALL -->
+          <button *ngIf="product_loader" class="btn btn-primary" type="button" disabled>
+              <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+              Fethcing Data....
+            </button>&nbsp;&nbsp;&nbsp;
+
+       
+    </div>
+    <div class="row">
+    <p-table #productTableId [value]="product" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]">
+    <ng-template pTemplate="header">
+        <tr>
+         
+            <!-- <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th> -->
+            <th pSortableColumn="productName">Product Name <p-sortIcon field="productName"></p-sortIcon></th>
+            <th pSortableColumn="shortDescription">Short Description <p-sortIcon field="shortDescription"></p-sortIcon></th>
+            <th pSortableColumn="detailedDescription">Detailed Description <p-sortIcon field="detailedDescription"></p-sortIcon></th>
+            <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
+            <th pSortableColumn="shortPrice">Starting Price <p-sortIcon field="shortPrice"></p-sortIcon></th>
+            <th pSortableColumn="bidEndDate">BidEndDate <p-sortIcon field="bidEndDate"></p-sortIcon></th>
+           
+            <th>Action</th>
+            
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+        <tr>
+           
+        <!-- <td>{{product.id}}</td> -->
+            <td>{{product.productName}}</td>
+            <td>{{product.shortDescription}}</td>
+            <td>{{product.detailedDescription}}</td>
+            <td>{{product.category}}</td>
+            <td>{{product.startingPrice}}</td>
+            <td>{{product.bidEndDate}}</td> 
+           
+            <td >
+                
+                <button pButton pRipple type="button"   (click)="bidDetails(product.id,product.productName)" class="p-button-rounded p-button-text p-button-success" >Bid Details</button>
+                <button  pButton spRipple  type="button"  (click)="deleteProduct(product.id,product.productName)"  [style.display]="product.isDeleted=='Y'? 'block':'none' "   class="p-button-rounded p-button-text p-button-danger showDeleteBtn">Delete Product</button>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+        <button type="button" icon="pi pi-plus" styleClass="p-button-text"></button>
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+        <button type="button" icon="pi pi-cloud" styleClass="p-button-text"></button>
+    </ng-template>
+</p-table>
+</div>
+<div>
+<!--popup for Add Product -->
+    <p-dialog header="Add Product" [(visible)]="display" [breakpoints]="{'900px': '75vw'}" [style]="{width: '50vw'}"
+    [draggable]="false" [resizable]="false">
+
+    <form  #ProductForm="ngForm" (ngSubmit)="addProduct(ProductForm);display=false" >
+        <div class="form-group">
+                <label for="productName">Product Name</label>
+                <input type="text" class="form-control" id="productName" required  
+                [(ngModel)]="model.productName" name="productName"
+                #productName="ngModel" minlength="5" maxlength="30"> 
+                            
+                <div [hidden]="productName.valid || productName.pristine"
+                    class="alert alert-danger">
+                    Product Name is required
+                </div> 
+        </div>
+        <div class="form-group">
+            <label for="shortDescription">Short Description </label>
+            <input type="text" class="form-control" id="shortDescription"
+                   required
+                   [(ngModel)]="model.shortDescription" name="shortDescription"
+                   #shortDescription="ngModel">
+            <div [hidden]="shortDescription.valid || shortDescription.pristine"
+                 class="alert alert-danger">
+                 Short Description is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="detailedDescription">Detailed Description </label>
+            <input type="text" class="form-control" id="detailedDescription"
+                   required
+                   [(ngModel)]="model.detailedDescription" name="detailedDescription"
+                   #detailedDescription="ngModel">
+            <div [hidden]="detailedDescription.valid || detailedDescription.pristine"
+                 class="alert alert-danger">
+                 Detailed Description is required
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="category">Select Category </label>
+            <select id="category" name="category" [(ngModel)]="model.category" class="form-control">
+                <!-- <option value="-1">Select Category</option> -->
+              <option value="Painting">Painting</option>
+              <option value="Sculptor">Sculptor</option>
+              <option value="Sculptor">Ornaments</option>
+            
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="startingPrice">Starting Price </label>
+            <input min="1" type="number" class="form-control" id="startingPrice"
+                   required
+                   [(ngModel)]="model.startingPrice" name="startingPrice"
+                   #startingPrice="ngModel">
+            <div [hidden]="startingPrice.valid || startingPrice.pristine"
+                 class="alert alert-danger">
+                 Starting Price is required
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="bidEndDate">Bid End Date</label>&nbsp;&nbsp;&nbsp;
+            <p-calendar [required]="true" [(ngModel)]="model.bidEndDate"  dateFormat="dd/mm/yy" name="bidEndDate" [minDate]="minDate" 
+            inputId="bidEndDate" [hideOnDateTimeSelect]="true" [readonlyInput]="true" #bidEndDate="ngModel"></p-calendar>
+            <div [hidden]="bidEndDate.valid || bidEndDate.pristine"
+            class="alert alert-danger">
+           Bid End date is required
+       </div>
+                   
+        </div>
+
+
+<button type="submit" class="btn btn-success" [disabled]="!ProductForm.form.valid">Add</button>&nbsp;&nbsp;&nbsp;
+
+</form>
+    
+</p-dialog>
+
+</div>
+<div>
+    <!--popup for Bid details -->
+    <p-dialog header="Bid Details"  [(visible)]="bidDetailsDisplay" [breakpoints]="{'960px': '75vw'}" [style]="{width: '70vw'}"
+    [draggable]="false" [resizable]="false">
+    <p-table [value]="biddetails" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]">
+<ng-template pTemplate="header">
+    <tr>
+     
+        <!-- <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th> -->
+        <th pSortableColumn="productName">Product Name <p-sortIcon field="productName"></p-sortIcon></th>
+        <th pSortableColumn="bidPrice">Bid Price <p-sortIcon field="bidPrice"></p-sortIcon></th>
+        <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+        <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+        <!-- <th pSortableColumn="phone">Phone<p-sortIcon field="phone"></p-sortIcon></th> -->
+        
+        
+    </tr>
+</ng-template>
+<ng-template pTemplate="body" let-biddetails>
+    <tr>
+               
+        <td>{{this.bidProductName}}</td>
+        <td>{{biddetails.bidPrice}}</td>
+        <td>{{biddetails.userName}}</td>
+        <td>{{biddetails.email}}</td>
+        <!-- <td>{{biddetails.phone}}</td> -->
+        
+    </tr>
+</ng-template>
+<ng-template pTemplate="paginatorleft">
+    <button type="button" icon="pi pi-plus" styleClass="p-button-text"></button>
+</ng-template>
+<ng-template pTemplate="paginatorright">
+    <button type="button" icon="pi pi-cloud" styleClass="p-button-text"></button>
+</ng-template>
+</p-table>
+
+    </p-dialog>
+
+
+</div>
+
+</div>
