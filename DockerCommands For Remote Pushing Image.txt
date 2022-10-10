@@ -1,0 +1,20 @@
+>>>>>>>>>>>create image command>>>>>>>>>>>>>>>>>>
+docker build -t eauction-eureka-server:1.0.0 .
+>>>>>>>>>>>>create tag command>>>>>>>>>>>>>>>>>>>>>
+docker tag eauction-eureka-server:1.0.0 pawanpatel668/eauction-eureka-server:1.0.0
+>>>>>>>>push to remote docker hub>>>>>>>>>>>>>>
+docker push <USERNAME>/<IMAGE NAME>:TAG
+docker push pawanpatel668/eauction-eureka-server:1.0.0
+
+docker build -t eauction-config-server:1.0.0 .
+docker tag eauction-config-server:1.0.0 pawanpatel668/eauction-config-server:1.0.0
+docker push pawanpatel668/eauction-config-server:1.0.0
+
+docker build -t eauction-seller-service:1.0.0 .
+docker tag eauction-seller-service:1.0.0 pawanpatel668/eauction-seller-service:1.0.0
+docker push pawanpatel668/eauction-seller-service:1.0.0
+
+docker build -t  eauction-buyer-producer:1.0.0 .
+docker tag  eauction-buyer-producer:1.0.0 pawanpatel668/eauction-buyer-producer:1.0.0
+docker push pawanpatel668/eauction-buyer-producer:1.0.0
+
