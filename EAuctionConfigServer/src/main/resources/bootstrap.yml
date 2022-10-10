@@ -1,0 +1,46 @@
+server:
+  port: ${PORT:8888}
+  
+spring:
+   
+  cloud:
+    config:
+      uri: ${CONFIG_SERVER_URL:http://localhost:8888}
+      server:
+        native:
+          searchLocations: classpath:/config
+        bootstrap: true
+  application:
+    name: config-service
+  profiles:
+    active: native
+    
+encrypt:
+  key:  secretkeydsfdsf      
+      
+
+eureka:
+  client:
+    serviceUrl:
+       defaultZone: http://eauctioneurekaserver-env.eba-vtap6hc2.ap-northeast-1.elasticbeanstalk.com/eureka
+    registerWithEureka: true
+    fetchRegistry: true
+  server:
+    waitTimeInMsWhenSyncEmpty: 0      
+    
+    
+management:
+    endpoint:
+        metrics:
+            enabled: true
+        prometheus:
+            enabled: true
+    endpoints:
+        web:
+            expose: '*'
+            exposure:
+                include: '*'
+    metrics:
+        export:
+            prometheus:
+                enabled: true    

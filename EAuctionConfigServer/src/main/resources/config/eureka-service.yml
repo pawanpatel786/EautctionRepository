@@ -1,0 +1,15 @@
+management:
+    endpoint:
+        metrics:
+            enabled: true
+        prometheus:
+            enabled: true
+    endpoints:
+        web:
+            expose: '*'
+            exposure:
+                include: '*'
+    metrics:
+        export:
+            prometheus:
+                enabled: true        

@@ -1,0 +1,68 @@
+MONGODB_URL: mongodb+srv://admin:admin@cluster0.gmfntmq.mongodb.net/?retryWrites=true&w=majority
+EAUCTION_EUREKA_SERVER_URL: http://eauctioneurekaserver-env.eba-vtap6hc2.ap-northeast-1.elasticbeanstalk.com/eureka
+EAUCTION_BUYER_PRODUCER_URL: http://eauctionbuyerproducer-env.eba-j8kqimcm.ap-northeast-1.elasticbeanstalk.com/buyer/
+EAUCTION_SELLER_URL: http://eauctionsellerservice-env.eba-cpc8dgvh.ap-northeast-1.elasticbeanstalk.com/seller/
+
+server:
+  port: 8050
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1000MB
+      max-request-size: 1000MB
+  application:
+    name: EAuction_Apigateway
+  data:
+    mongodb:
+      uri: ${MONGODB_URL}
+      database: EAuctionDataBase 
+      port: 27017
+      repositories:
+        enabled: true   
+zuul:
+  host:
+    connect-timeout-millis: 10000
+    socket-timeout-millis: 60000
+  routes:
+    eauctionBuyer:
+      path: /eAuction/buyer/**
+      url: ${EAUCTION_BUYER_PRODUCER_URL}
+    eauctionSeller:
+      path: /eAuction/seller/**
+      url: ${EAUCTION_SELLER_URL}
+  sensitiveHeaders:
+
+eauction:
+  app:
+    jwtSecret: eauctionSecretKey
+    jwtExpirationMs: 86400000  
+  
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EAUCTION_EUREKA_SERVER_URL} 
+
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      expose: '*'
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true             

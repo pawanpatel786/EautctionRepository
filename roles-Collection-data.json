@@ -1,0 +1,11 @@
+[{
+  "_id": {
+    "$oid": "630327e8add8363db17a7d79"
+  },
+  "name": "ROLE_SELLER"
+},{
+  "_id": {
+    "$oid": "6303281badd8363db17a7d7a"
+  },
+  "name": "ROLE_BUYER"
+}]

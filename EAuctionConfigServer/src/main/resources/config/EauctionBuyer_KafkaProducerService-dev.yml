@@ -1,0 +1,77 @@
+server:
+  port: 8081
+BOOTSTRAP_SERVER: pkc-l7pr2.ap-south-1.aws.confluent.cloud:9092
+CCLOUD_KEY: X2NNEGOTKW4ISM4K
+CCLOUD_SECRET: 0Au4EkGC67HmMwFroDcVJSnMBPtcxCwGJpA88TZ79uElE19txQZlF8/1METazZ5j
+SCHEMA_REGISTRY_ENDPOINT: https://psrc-zj6ny.us-east-2.aws.confluent.cloud
+SCHEMA_REGISTRY_KEY: PFBULI4TPN456O5B
+SCHEMA_REGISTRY_SECRET: Gfrs0PxeSinzCBkW0E4FIuOqyY+GuW2uZemedHPxSh+vLWqBE0SncGtfbIChfHZl
+
+MONGODB_URL: mongodb+srv://admin:admin@cluster0.gmfntmq.mongodb.net/?retryWrites=true&w=majority
+EAUCTION_EUREKA_SERVER_URL: http://eauctioneurekaserver-env.eba-vtap6hc2.ap-northeast-1.elasticbeanstalk.com/eureka
+
+spring:
+  application:
+    name: EauctionBuyer_KafkaProducerService
+  kafka:
+    properties:
+      # CCloud broker connection parameters
+      number-of-tries: 3
+      ssl.endpoint.identification.algorithm: https
+      sasl.mechanism: PLAIN
+      request.timeout.ms: 20000
+      retry.backoff.ms: 500
+      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${CCLOUD_KEY}" password="${CCLOUD_SECRET}";
+      security.protocol: SASL_SSL
+
+      # CCloud Schema Registry Connection parameter
+      schema.registry.url: ${SCHEMA_REGISTRY_ENDPOINT}
+      basic.auth.credentials.source: USER_INFO
+      schema.registry.basic.auth.user.info: ${SCHEMA_REGISTRY_KEY}:${SCHEMA_REGISTRY_SECRET}
+   
+    producer:
+      bootstrap-servers: ${BOOTSTRAP_SERVER}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      group-id: auction
+  data:
+    mongodb:
+      uri: ${MONGODB_URL}
+      database: EAuctionDataBase 
+      port: 27017
+      repositories:
+        enabled: true    
+#custom message
+delete:
+  product:
+    success:
+      msg=: Product is deleted successfully
+eauction:
+  app:
+    jwtSecret: eauctionSecretKey
+    jwtExpirationMs: 86400000   
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EAUCTION_EUREKA_SERVER_URL}
+avro:
+  topic:
+    name: "EauctionTopic"
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      expose: '*'
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true     
+
+    

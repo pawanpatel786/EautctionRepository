@@ -1,0 +1,13 @@
+{
+    "AWSEBDockerrunVersion":"1",
+    "Image":{
+        "Name":"pawanpatel668/eauction-eureka-server:1.0.0",
+        "Update": "true"
+    },
+
+    "Ports":[
+        {
+            "ContainerPort":8761
+        }
+    ]
+}

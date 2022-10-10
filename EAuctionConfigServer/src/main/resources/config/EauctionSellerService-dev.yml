@@ -1,0 +1,45 @@
+MONGODB_URL: mongodb+srv://admin:admin@cluster0.gmfntmq.mongodb.net/?retryWrites=true&w=majority
+EAUCTION_EUREKA_SERVER_URL: http://eauctioneurekaserver-env.eba-vtap6hc2.ap-northeast-1.elasticbeanstalk.com/eureka
+
+server:
+  port: 8083
+spring:
+  application:
+    name: EauctionSellerService
+  data:
+    mongodb:
+      uri: ${MONGODB_URL}
+      database: EAuctionDataBase 
+      port: 27017
+      repositories:
+        enabled: true    
+#custom message
+delete:
+  product:
+    success:
+      msg=: Product is deleted successfully
+eauction:
+  app:
+    jwtSecret: eauctionSecretKey
+    jwtExpirationMs: 86400000   
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EAUCTION_EUREKA_SERVER_URL}
+
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      expose: '*'
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true      

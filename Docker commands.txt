@@ -1,0 +1,26 @@
+>docker build -t eauction-eureka-server .
+>docker build -t eauction-config-server .
+>docker build -t eauction-api-gateway .
+>docker build -t eauction-buyer-consumer .
+>docker build -t eauction-buyer-producer .
+>docker build -t eauction-seller-service .
+
+create with specific tag
+>docker build -t eauction-seller-service:v1 .
+
+create network--
+>docker network create --driver bridge isolated
+
+>docker network inspect <networkname>
+
+
+run with network and container
+>docker run --name eureka-container -p 8761:8761 --network isolated eauction-eureka-server
+>docker run --name config-container -p 8888:8888 --network isolated eauction-config-server 
+>docker run --name apigateway-container -p 8050:8050 --network isolated eauction-api-gateway
+>docker run --name buyer-producer-container -p 8081:8081 --network isolated  eauction-buyer-producer
+
+>docker run --name buyer-consumer-container -p 8082:8082 --network isolated  eauction-buyer-consumer
+
+>docker run --name seller-container -p 8083:8083 --network isolated eauction-seller-service
+

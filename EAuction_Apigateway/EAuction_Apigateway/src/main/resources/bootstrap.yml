@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: EAuction_Apigateway
+  profiles:
+    active: dev      
+  
+  cloud:
+    config:
+      uri: ${CONFIG_SERVER_URL:http://eauctionconfigserver-env.eba-e4hdkqmu.ap-northeast-1.elasticbeanstalk.com/}
+       
